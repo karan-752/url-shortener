@@ -12,12 +12,20 @@ import java.util.Optional;
 public class UrlMappingService {
     private final UrlMappingRepository repository;
 
+    private String generateShortCode() {
+        return UUID.randomUUID().toString().substring(0, 6);
+    }
+    
     public UrlMappingService(UrlMappingRepository repository) {
         this.repository = repository;
     }
 
     public UrlMapping createShortUrl(String originalUrl) {
-        String shortCode = UUID.randomUUID().toString().substring(0, 6);
+        String shortCode;
+
+        do {
+            shortCode = generateShortCode();
+        } while (repository.existsByShortCode(shortCode));
         
         UrlMapping urlMapping = new UrlMapping();
 

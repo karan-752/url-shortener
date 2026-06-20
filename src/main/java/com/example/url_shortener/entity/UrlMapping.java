@@ -2,6 +2,7 @@ package com.example.url_shortener.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 public class UrlMapping {
@@ -45,5 +46,9 @@ public class UrlMapping {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    private String generateShortCode() {
+        return UUID.randomUUID().toString().substring(0, 6);
     }
 }
