@@ -2,7 +2,6 @@ package com.example.url_shortener.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 public class UrlMapping {
@@ -16,6 +15,8 @@ public class UrlMapping {
     private String shortCode;
 
     private LocalDateTime createdAt;
+
+    private Long clickCount = 0L;
 
     public UrlMapping() {
     }
@@ -48,7 +49,15 @@ public class UrlMapping {
         this.createdAt = createdAt;
     }
 
-    private String generateShortCode() {
-        return UUID.randomUUID().toString().substring(0, 6);
+    public Long getClickCount() {
+        return clickCount;
+    }
+
+    public void setClickCount(Long clickCount) {
+        this.clickCount = clickCount;
+    }
+
+    public void incrementClickCount() {
+        this.clickCount++;
     }
 }

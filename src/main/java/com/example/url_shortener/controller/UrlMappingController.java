@@ -2,6 +2,7 @@ package com.example.url_shortener.controller;
 
 import com.example.url_shortener.dto.CreateUrlRequest;
 import com.example.url_shortener.dto.CreateUrlResponse;
+import com.example.url_shortener.dto.UrlStatsResponse;
 import com.example.url_shortener.entity.UrlMapping;
 import com.example.url_shortener.service.UrlMappingService;
 import jakarta.validation.Valid;
@@ -28,7 +29,24 @@ public class UrlMappingController {
     @GetMapping("/{shortCode}")
     public ResponseEntity<Object> redirectToOriginalUrl(@PathVariable String shortCode) {
         return service.getShortCode(shortCode)
-                .map(urlMapping -> ResponseEntity.status(HttpStatus.FOUND).location(URI.create(urlMapping.getOriginalUrl())).build())
+                .map(urlMapping -> { 
+                    urlMapping.incrementClickCount();
+                    service.save(urlMapping);
+                    return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(urlMapping.getOriginalUrl())).build();
+                })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping("/{shortCode}/stats")
+    public ResponseEntity<UrlStatsResponse> getStats(@PathVariable String shortCode) {
+        return service.getShortCode(shortCode)
+                .map(url -> new UrlStatsResponse(
+                        url.getOriginalUrl(),
+                        url.getShortCode(),
+                        url.getClickCount(),
+                        url.getCreatedAt()
+                ))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

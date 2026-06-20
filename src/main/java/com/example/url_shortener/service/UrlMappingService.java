@@ -39,4 +39,8 @@ public class UrlMappingService {
     public Optional<UrlMapping> getShortCode(String shortCode) {
         return repository.findByShortCode(shortCode);
     }
+
+    public UrlMapping save(UrlMapping urlMapping) {
+        return repository.save(urlMapping);
+    }
 }
