@@ -1,6 +1,11 @@
 package com.example.url_shortener.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.URL;
+
 public class CreateUrlRequest {
+    @NotBlank(message = "Original URL cannot be empty")
+    @URL(message = "Please provide a valid URL")
     private String originalUrl;
 
     public String getOriginalUrl() {

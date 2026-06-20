@@ -4,16 +4,14 @@ import com.example.url_shortener.dto.CreateUrlRequest;
 import com.example.url_shortener.dto.CreateUrlResponse;
 import com.example.url_shortener.entity.UrlMapping;
 import com.example.url_shortener.service.UrlMappingService;
-
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @RestController
-@RequestMapping("api/v1/urls")
+@RequestMapping("/api/v1/urls")
 public class UrlMappingController {
     private final UrlMappingService service;
 
@@ -22,7 +20,7 @@ public class UrlMappingController {
     }
 
     @PostMapping
-    public CreateUrlResponse createShortUrl(@RequestBody CreateUrlRequest request) {
+    public CreateUrlResponse createShortUrl(@Valid @RequestBody CreateUrlRequest request) {
         UrlMapping saved = service.createShortUrl(request.getOriginalUrl());
         return new CreateUrlResponse(saved.getShortCode(), "http://localhost:8080/api/v1/urls/" + saved.getShortCode());
     }
